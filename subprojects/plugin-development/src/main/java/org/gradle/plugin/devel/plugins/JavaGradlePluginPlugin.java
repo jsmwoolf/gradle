@@ -18,6 +18,7 @@ package org.gradle.plugin.devel.plugins;
 
 import com.google.common.collect.Sets;
 import org.gradle.api.Action;
+import org.gradle.api.JavaVersion;
 import org.gradle.api.NonNullApi;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -373,10 +374,17 @@ public class JavaGradlePluginPlugin implements Plugin<Project> {
             Set<SourceSet> testSourceSets = extension.getTestSourceSets();
             project.getNormalization().getRuntimeClasspath().ignore(PluginUnderTestMetadata.METADATA_FILE_NAME);
 
-            project.getTasks().withType(Test.class).configureEach(test -> test.getInputs()
-                .files(pluginClasspathTask.get().getPluginClasspath())
-                .withPropertyName("pluginClasspath")
-                .withNormalizer(ClasspathNormalizer.class));
+            project.getTasks().withType(Test.class).configureEach(test -> {
+                test.getInputs()
+                    .files(pluginClasspathTask.get().getPluginClasspath())
+                    .withPropertyName("pluginClasspath")
+                    .withNormalizer(ClasspathNormalizer.class);
+
+                // Needed for using ProjectBuilder in tests.
+                if (test.getJavaVersion().isCompatibleWith(JavaVersion.VERSION_16)) {
+                    test.jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED");
+                }
+            });
 
             for (SourceSet testSourceSet : testSourceSets) {
                 String implementationConfigurationName = testSourceSet.getImplementationConfigurationName();

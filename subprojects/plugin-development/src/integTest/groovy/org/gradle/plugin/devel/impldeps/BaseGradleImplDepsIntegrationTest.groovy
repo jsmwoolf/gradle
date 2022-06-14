@@ -98,6 +98,18 @@ abstract class BaseGradleImplDepsIntegrationTest extends AbstractIntegrationSpec
         buildFile.toString()
     }
 
+    static String testablePluginProjectWithAddOpens(String appliedLanguagePlugin = applyGroovyPlugin()) {
+        return """
+            ${testablePluginProject(appliedLanguagePlugin)}
+            // Needed when using ProjectBuilder
+            tasks.withType(Test).configureEach {
+                if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_16)) {
+                    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+                }
+            }
+        """
+    }
+
     static void assertSingleGenerationOutput(String output, String regex) {
         def pattern = /\b${regex}\b/
         def matcher = output =~ pattern

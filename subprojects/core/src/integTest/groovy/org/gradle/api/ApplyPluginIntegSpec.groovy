@@ -107,6 +107,14 @@ class ApplyPluginIntegSpec extends AbstractIntegrationSpec {
 
         and:
         buildFile << junitBasedBuildScript()
+        buildFile << """
+            // Needed when using ProjectBuilder
+            tasks.withType(Test).configureEach {
+                if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_16)) {
+                    jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+                }
+            }
+        """
 
         expect:
         executer.withArgument("--info")

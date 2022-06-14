@@ -287,6 +287,20 @@ This allows configuration of PMD to run its analysis on more than one thread.
 
 See the [documentation](userguide/pmd_plugin.html#sec:pmd_conf_threads) for more information.
 
+### Test Reliability Improvements
+
+Test tasks have now been updated to avoid using `--add-opens` for `java.base/java.util` and `java.base/java.lang` by
+default. The existence of these flags, in some cases, could have led to a situation where code performing deep
+reflection on JDK internals would pass during testing while emitting `IllegalAccessException`s during runtime.  
+
+For some builds, this change may cause test failures for tests which were previously passing. For example for builds
+running tests on JDK 16+, code performing reflection on JDK internals which would otherwise fail in production
+without the appropriate CLI flags will now also fail in Gradle tests. For similar builds running tests on JDK versions older than 16, new illegal access warnings which were previously hidden will now appear in build logs. 
+
+Gradle takes test reliability very seriously, and while this change may break some existing builds, most behavior
+changes are likely to uncover potential bugs which could have previously only been detected at runtime. For a
+detailed description on how to mitigate this change, please see the [Upgrade Guide](userguide/upgrading_version_7.html#changes_@baseVersion@).
+
 ## Promoted features
 Promoted features are features that were incubating in previous versions of Gradle but are now supported and subject to backwards compatibility.
 See the User Manual section on the “[Feature Lifecycle](userguide/feature_lifecycle.html)” for more information.

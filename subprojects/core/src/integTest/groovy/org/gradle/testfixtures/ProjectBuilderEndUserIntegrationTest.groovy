@@ -44,6 +44,13 @@ class ProjectBuilderEndUserIntegrationTest extends AbstractIntegrationSpec {
             testLogging.exceptionFormat = 'full'
         }
 
+        // Needed when using ProjectBuilder
+        tasks.withType(Test).configureEach {
+            if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_16)) {
+                jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
+            }
+        }
+
         """
     }
 
