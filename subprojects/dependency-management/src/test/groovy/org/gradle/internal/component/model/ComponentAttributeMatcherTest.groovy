@@ -25,6 +25,7 @@ import org.gradle.api.attributes.MultipleCandidatesDetails
 import org.gradle.api.internal.attributes.AttributeContainerInternal
 import org.gradle.api.internal.attributes.ImmutableAttributes
 import org.gradle.util.AttributeTestUtil
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.util.stream.Collectors
@@ -216,6 +217,7 @@ class ComponentAttributeMatcherTest extends Specification {
         matcher.match(schema, [candidate1, candidate2, candidate3], requested, null, explanationBuilder) == [candidate1]
     }
 
+    @Ignore
     def "prefers match with superset of matching attributes"() {
         given:
         def matcher = new ComponentAttributeMatcher()
