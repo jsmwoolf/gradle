@@ -57,12 +57,9 @@ abstract class BuildCommitDistribution @Inject internal constructor(
     abstract val commitDistributionToolingApiJar: RegularFileProperty
 
     init {
-        onlyIf {
-            println("Commit baseline: ${commitBaseline.getOrElse("")}")
-            commitBaseline.getOrElse("").apply { println("Commit baseline: $this") }.matches(commitVersionRegex)
-        }
-        commitDistribution.set(project.layout.buildDirectory.file(commitBaseline.map { "distributions/gradle-$it.zip" }))
-        commitDistributionToolingApiJar.set(project.layout.buildDirectory.file(commitBaseline.map { "distributions/gradle-tooling-api-$it.jar" }))
+        onlyIf { commitBaseline.getOrElse("").matches(commitVersionRegex) }
+        commitDistribution.set(project.rootProject.layout.projectDirectory.file(commitBaseline.map { "commit-distributions/gradle-$it.zip" }))
+        commitDistributionToolingApiJar.set(project.rootProject.layout.projectDirectory.file(commitBaseline.map { "commit-distributions/gradle-tooling-api-$it.jar" }))
     }
 
     @TaskAction

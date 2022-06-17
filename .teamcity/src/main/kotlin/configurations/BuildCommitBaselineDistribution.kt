@@ -23,8 +23,8 @@ class BuildCommitBaselineDistribution(model: CIBuildModel, stage: Stage) : BaseG
     )
 
     artifactRules = """
-            |subprojects/performance/build/distributions/gradle-*.zip => commit-distributions
-            |subprojects/performance/build/distributions/gradle-tooling-api-*.jar => commit-distributions
+            |commit-distributions/gradle-*.zip => commit-distributions
+            |commit-distributions/gradle-tooling-api-*.jar => commit-distributions
             |""".trimMargin()
 }) {
     companion object {

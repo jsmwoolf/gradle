@@ -205,8 +205,8 @@ fun Dependencies.buildCommitBaselineDistributionDependency(buildCommitBaselineDi
         id = "ARTIFACT_DEPENDENCY_$buildCommitBaselineDistributionId"
         cleanDestination = true
         artifactRules = """
-            |commit-distributions/gradle-*.zip => subprojects/performance/build/distributions
-            |commit-distributions/gradle-tooling-api-*.jar => subprojects/performance/build/distributions
+            |commit-distributions/gradle-*.zip => commit-distributions
+            |commit-distributions/gradle-tooling-api-*.jar => commit-distributions
             |""".trimMargin()
     }
 }
