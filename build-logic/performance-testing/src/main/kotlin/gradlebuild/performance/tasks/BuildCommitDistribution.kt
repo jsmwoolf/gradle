@@ -66,7 +66,9 @@ abstract class BuildCommitDistribution @Inject internal constructor(
 
     @TaskAction
     fun buildCommitDistribution() {
-        if (commitDistribution.asFile.orNull?.isFile != true && commitDistributionToolingApiJar.asFile.orNull?.isFile != true) {
+        if (commitDistribution.asFile.orNull?.isFile == true && commitDistributionToolingApiJar.asFile.orNull?.isFile == true) {
+            println("Commit baseline distribution already exists: ${commitDistribution.asFile} ${commitDistributionToolingApiJar.asFile}, skip")
+        } else {
             val rootProjectDir = project.repoRoot().asFile.absolutePath
             val commit = commitBaseline.map { it.substring(it.lastIndexOf('-') + 1) }
             val checkoutDir = RemoteProject.checkout(fsOps, execOps, rootProjectDir, commit.get(), temporaryDir)
