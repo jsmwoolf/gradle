@@ -58,6 +58,7 @@ abstract class BuildCommitDistribution @Inject internal constructor(
 
     init {
         onlyIf {
+            println("Commit baseline: ${commitBaseline.getOrElse("")}")
             commitBaseline.getOrElse("").apply { println("Commit baseline: $this") }.matches(commitVersionRegex)
         }
         commitDistribution.set(project.layout.buildDirectory.file(commitBaseline.map { "distributions/gradle-$it.zip" }))

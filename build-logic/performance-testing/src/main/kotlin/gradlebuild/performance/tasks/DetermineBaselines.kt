@@ -58,6 +58,8 @@ abstract class DetermineBaselines @Inject constructor(@get:Internal val distribu
         } else {
             determinedBaselines.set(configuredBaselines)
         }
+
+        println("Determined baseline is: ${determinedBaselines.get()}")
     }
 
     /**
