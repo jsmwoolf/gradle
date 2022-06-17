@@ -25,7 +25,6 @@ import org.gradle.api.internal.GradleInternal
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.caching.http.HttpBuildCache
@@ -33,7 +32,6 @@ import org.gradle.internal.os.OperatingSystem
 import org.gradle.process.ExecOperations
 import org.gradle.work.DisableCachingByDefault
 import java.io.File
-import java.util.Arrays
 import javax.inject.Inject
 
 
@@ -59,7 +57,9 @@ abstract class BuildCommitDistribution @Inject internal constructor(
     abstract val commitDistributionToolingApiJar: RegularFileProperty
 
     init {
-        onlyIf { commitBaseline.getOrElse("").matches(commitVersionRegex) }
+        onlyIf {
+            commitBaseline.getOrElse("").apply { println("Commit baseline: $this") }.matches(commitVersionRegex)
+        }
         commitDistribution.set(project.layout.buildDirectory.file(commitBaseline.map { "distributions/gradle-$it.zip" }))
         commitDistributionToolingApiJar.set(project.layout.buildDirectory.file(commitBaseline.map { "distributions/gradle-tooling-api-$it.jar" }))
     }
