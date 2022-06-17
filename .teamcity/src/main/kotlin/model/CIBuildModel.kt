@@ -11,6 +11,7 @@ import common.Os
 import common.VersionedSettingsBranch
 import common.toCapitalized
 import configurations.BaseGradleBuildType
+import configurations.BuildCommitBaselineDistribution
 import configurations.BuildDistributions
 import configurations.CheckLinks
 import configurations.CompileAllProduction
@@ -53,7 +54,7 @@ data class CIBuildModel(
         Stage(
             StageNames.QUICK_FEEDBACK_LINUX_ONLY,
             specificBuilds = listOf(
-                SpecificBuild.CompileAll, SpecificBuild.SanityCheck
+                SpecificBuild.CompileAll, SpecificBuild.SanityCheck, SpecificBuild.BuildCommitBaselineDistribution
             ),
             functionalTests = listOf(
                 TestCoverage(1, TestType.quick, Os.LINUX, JvmCategory.MAX_VERSION, expectedBucketNumber = DEFAULT_LINUX_FUNCTIONAL_TEST_BUCKET_SIZE)
@@ -356,6 +357,11 @@ enum class SpecificBuild {
     SanityCheck {
         override fun create(model: CIBuildModel, stage: Stage): BaseGradleBuildType {
             return SanityCheck(model, stage)
+        }
+    },
+    BuildCommitBaselineDistribution {
+        override fun create(model: CIBuildModel, stage: Stage): BaseGradleBuildType {
+            return BuildCommitBaselineDistribution(model, stage)
         }
     },
     BuildDistributions {
