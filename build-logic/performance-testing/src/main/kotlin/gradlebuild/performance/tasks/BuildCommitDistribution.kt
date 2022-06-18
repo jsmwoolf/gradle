@@ -65,7 +65,7 @@ abstract class BuildCommitDistribution @Inject internal constructor(
     @TaskAction
     fun buildCommitDistribution() {
         if (commitDistribution.asFile.orNull?.isFile == true && commitDistributionToolingApiJar.asFile.orNull?.isFile == true) {
-            println("Commit baseline distribution already exists: ${commitDistribution.asFile.get()} ${commitDistributionToolingApiJar.asFile.get()}, skip")
+            println("Skip building existing commit baseline distribution: ${commitDistribution.asFile.get()} ${commitDistributionToolingApiJar.asFile.get()}")
         } else {
             val rootProjectDir = project.repoRoot().asFile.absolutePath
             val commit = commitBaseline.map { it.substring(it.lastIndexOf('-') + 1) }
