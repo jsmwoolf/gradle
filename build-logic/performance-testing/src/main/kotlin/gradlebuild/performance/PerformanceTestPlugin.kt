@@ -87,12 +87,12 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 
 object Config {
-    const val performanceTestScenarioListFileName = "performance-tests/scenario-list.csv"
     const val performanceTestReportsDir = "performance-tests/report"
     const val performanceTestResultsJsonName = "perf-results.json"
     const val performanceTestResultsJson = "performance-tests/$performanceTestResultsJsonName"
     const val androidStudioVersion = "2021.1.1.19"
     val defaultAndroidStudioJvmArgs = listOf("-Xms256m", "-Xmx4096m")
+    const val defaultBaseline = "7.6-commit-0778ab5"
 }
 
 
@@ -336,7 +336,7 @@ class PerformanceTestPlugin : Plugin<Project> {
         val buildCommitDistribution = tasks.register("buildCommitDistribution", BuildCommitDistribution::class)
 
         determineBaselines.configure {
-            configuredBaselines.set(extension.baselines)
+            configuredBaselines.set(extension.baselines.orElse(Config.defaultBaseline))
         }
 
         buildCommitDistribution.configure {

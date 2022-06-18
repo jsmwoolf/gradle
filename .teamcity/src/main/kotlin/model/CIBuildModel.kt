@@ -54,7 +54,7 @@ data class CIBuildModel(
         Stage(
             StageNames.QUICK_FEEDBACK_LINUX_ONLY,
             specificBuilds = listOf(
-                SpecificBuild.CompileAll, SpecificBuild.SanityCheck, SpecificBuild.BuildCommitBaselineDistribution
+                SpecificBuild.CompileAll, SpecificBuild.SanityCheck
             ),
             functionalTests = listOf(
                 TestCoverage(1, TestType.quick, Os.LINUX, JvmCategory.MAX_VERSION, expectedBucketNumber = DEFAULT_LINUX_FUNCTIONAL_TEST_BUCKET_SIZE)
@@ -91,7 +91,7 @@ data class CIBuildModel(
             StageNames.READY_FOR_NIGHTLY,
             trigger = Trigger.eachCommit,
             specificBuilds = listOf(
-                SpecificBuild.SmokeTestsMinJavaVersion
+                SpecificBuild.SmokeTestsMinJavaVersion, SpecificBuild.BuildCommitBaselineDistribution
             ),
             functionalTests = listOf(
                 TestCoverage(5, TestType.quickFeedbackCrossVersion, Os.LINUX, JvmCategory.MIN_VERSION, QUICK_CROSS_VERSION_BUCKETS.size),

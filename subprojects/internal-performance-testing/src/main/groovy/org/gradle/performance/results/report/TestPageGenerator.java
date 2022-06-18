@@ -285,10 +285,11 @@ public class TestPageGenerator extends HtmlPageGenerator<PerformanceTestHistory>
 
     private String getReproductionInstructions(PerformanceTestHistory history) {
         PerformanceScenario scenario = history.getExperiment().getScenario();
-        return String.format("To reproduce, run ./gradlew :%s:%sPerformanceAdhocTest --tests '%s' -PperformanceBaselines=force-defaults",
+        return String.format("To reproduce, run ./gradlew :%s:%sPerformanceAdhocTest --tests '%s' -PperformanceBaselines='%s'",
             projectName,
             history.getExperiment().getTestProject(),
-            scenario.getClassName() + "." + scenario.getTestName()
+            scenario.getClassName() + "." + scenario.getTestName(),
+            ""
         );
     }
 

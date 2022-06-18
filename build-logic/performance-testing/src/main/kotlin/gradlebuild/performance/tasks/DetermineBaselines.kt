@@ -22,16 +22,9 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
-import org.gradle.internal.os.OperatingSystem
 import org.gradle.kotlin.dsl.*
 import org.gradle.work.DisableCachingByDefault
 import javax.inject.Inject
-
-
-const val defaultBaseline = "defaults"
-
-
-const val forceDefaultBaseline = "force-defaults"
 
 
 const val flakinessDetectionCommitBaseline = "flakiness-detection-commit"
@@ -48,11 +41,9 @@ abstract class DetermineBaselines @Inject constructor(@get:Internal val distribu
 
     @TaskAction
     fun determineForkPointCommitBaseline() {
-        if (configuredBaselines.getOrElse("") == forceDefaultBaseline) {
-            determinedBaselines.set(defaultBaseline)
-        } else if (configuredBaselines.getOrElse("") == flakinessDetectionCommitBaseline) {
+        if (configuredBaselines.getOrElse("") == flakinessDetectionCommitBaseline) {
             determinedBaselines.set(determineFlakinessDetectionBaseline())
-        } else if (!currentBranchIsMasterOrRelease() && !OperatingSystem.current().isWindows && configuredBaselines.isDefaultValue()) {
+        } else if (!currentBranchIsMasterOrRelease()) {
             // Windows git complains "long path" so we don't build commit distribution on Windows
             determinedBaselines.set(forkPointCommitBaseline())
         } else {
@@ -73,9 +64,6 @@ abstract class DetermineBaselines @Inject constructor(@get:Internal val distribu
 
     private
     fun currentBranchIsMasterOrRelease() = project.the<ModuleIdentityExtension>().logicalBranch.get() in listOf("master", "release")
-
-    private
-    fun Property<String>.isDefaultValue() = !isPresent || get() in listOf("", defaultBaseline)
 
     private
     fun currentCommitBaseline() = commitBaseline(project.execAndGetStdout("git", "rev-parse", "HEAD"))

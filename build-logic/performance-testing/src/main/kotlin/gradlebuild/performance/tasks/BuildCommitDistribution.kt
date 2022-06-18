@@ -58,14 +58,14 @@ abstract class BuildCommitDistribution @Inject internal constructor(
 
     init {
         onlyIf { commitBaseline.getOrElse("").matches(commitVersionRegex) }
-        commitDistribution.set(project.rootProject.layout.projectDirectory.file(commitBaseline.map { "commit-distributions/gradle-$it.zip" }))
-        commitDistributionToolingApiJar.set(project.rootProject.layout.projectDirectory.file(commitBaseline.map { "commit-distributions/gradle-tooling-api-$it.jar" }))
+        commitDistribution.set(project.rootProject.layout.projectDirectory.file(commitBaseline.map { "intTestHomeDir/commit-distributions/gradle-$it.zip" }))
+        commitDistributionToolingApiJar.set(project.rootProject.layout.projectDirectory.file(commitBaseline.map { "intTestHomeDir/commit-distributions/gradle-tooling-api-$it.jar" }))
     }
 
     @TaskAction
     fun buildCommitDistribution() {
         if (commitDistribution.asFile.orNull?.isFile == true && commitDistributionToolingApiJar.asFile.orNull?.isFile == true) {
-            println("Commit baseline distribution already exists: ${commitDistribution.asFile} ${commitDistributionToolingApiJar.asFile}, skip")
+            println("Commit baseline distribution already exists: ${commitDistribution.asFile.get()} ${commitDistributionToolingApiJar.asFile.get()}, skip")
         } else {
             val rootProjectDir = project.repoRoot().asFile.absolutePath
             val commit = commitBaseline.map { it.substring(it.lastIndexOf('-') + 1) }
