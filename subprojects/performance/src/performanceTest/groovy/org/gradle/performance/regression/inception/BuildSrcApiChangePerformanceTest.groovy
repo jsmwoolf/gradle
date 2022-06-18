@@ -82,13 +82,13 @@ class BuildSrcApiChangePerformanceTest extends AbstractCrossVersionPerformanceTe
     private static int determineNumberOfRuns(String testProject) {
         switch (testProject) {
             case 'mediumMonolithicJavaProject':
-                return 40
+                return 4
             case 'largeJavaMultiProject':
-                return 20
+                return 2
             case 'largeJavaMultiProjectKotlinDsl':
-                return 10
+                return 1
             default:
-                20
+                2
         }
     }
 

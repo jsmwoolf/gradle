@@ -29,26 +29,34 @@ import org.gradle.util.GradleVersion
  * +-- intTestHomeDir
  *    +-- commit-distributions
  *        +-- gradle-7.5-commit-1a2b3c4.zip
- *        +-- gralde-7.5-commit-1a2b3c4
- *            +-- bin
- *            +-- lib
- *            +-- ..
  *        +-- gradle-tooling-api-7.5-commit-1a2b3c4.jar
+ *        \-- gradle-7.5-commit-1a2b3c4
+ *            \-- gradle-7.5-20220618071843+0000
+ *                +-- bin
+ *                +-- lib
+ *                \-- ..
  */
 class CommitDistribution extends DefaultGradleDistribution {
     private final TestFile commitDistributionsDir;
 
     CommitDistribution(String version, TestFile commitDistributionsDir) {
-        super(GradleVersion.version(version), commitDistributionsDir.file(version), commitDistributionsDir.file("gradle-${version}.zip"))
+        super(GradleVersion.version(version), commitDistributionsDir.file("gradle-$version"), commitDistributionsDir.file("gradle-${version}.zip"))
         this.commitDistributionsDir = commitDistributionsDir;
     }
 
+    /**
+     * `super.gradleHome` is not the real Gradle home but the directory which the commit distribution is unzipped into.
+     * The real Gradle home is `gradle-7.5-commit-1a2b3c4/gradle-7.5-20220618071843+0000`.
+     * @return
+     */
+    @Override
     TestFile getGradleHomeDir() {
-        TestFile gradleHome = super.getGradleHomeDir()
-        if (!gradleHome.isDirectory()) {
-            super.binDistribution.usingNativeTools().unzipTo(gradleHome)
+        TestFile superGradleHome = super.getGradleHomeDir()
+
+        if (!superGradleHome.isDirectory() || superGradleHome.listFiles({ it.isDirectory() } as FileFilter).size() == 0) {
+            super.binDistribution.usingNativeTools().unzipTo(superGradleHome)
         }
-        return gradleHome
+        return new TestFile(superGradleHome.listFiles({ it.isDirectory() } as FileFilter).first())
     }
 
     static boolean isCommitDistribution(String version) {

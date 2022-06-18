@@ -155,7 +155,7 @@ public abstract class AbstractBuildExperimentRunner implements BuildExperimentRu
         if (experiment.getInvocationCount() != null) {
             return experiment.getInvocationCount();
         }
-        return 40;
+        return 4;
     }
 
     protected static int warmupsForExperiment(BuildExperimentSpec experiment) {
@@ -167,7 +167,7 @@ public abstract class AbstractBuildExperimentRunner implements BuildExperimentRu
             return experiment.getWarmUpCount();
         }
         if (usesDaemon(experiment)) {
-            return 10;
+            return 1;
         } else {
             return 1;
         }
